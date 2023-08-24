@@ -64,7 +64,10 @@ int main(int argc, char **argv){
 
 For this exercise, you must apply the ```#pragma omp parallel```to parallelize the code [hello.c](src/hello/hello.c). For that, follow the steps below:
 1. In the terminal, go to the directory by typing : ```cd /src/hello```
-2. Compile the sequential code and execute: ```make && make run```. The output of this execution will be a single message *Hello World*.
+2. Compile the sequential code and execute: ```make && make run```. The output of this execution will be a single message 
+
+        Hello World
+
 3. Parallelize the code [hello.c](src/hello/hello.c) with the OpenMP parallel constructor so that multiple *Hello World* are printed, one by each thread. Don't forget to save the modifications.
 4. When step 3 is done, edit the [Makefile](src/hello/Makefile) to include the flag ```-fopenmp```. Don't forget to save the modifications.
 5. Compile the OpenMP code and execute it: ```make && make run```. The output with two threads should be as follows:

@@ -220,9 +220,6 @@ int sum=0;
 }
 printf("The sum of all thread ids is: %d\n", sum);       
 ```
-
-
-
 ---
 
 ### **3.2 Work-sharing constructs**
@@ -258,7 +255,7 @@ for(int i = 0; i < N; i++){
 
 #### Exercise 4: Applying the Work-sharing constructor for the addVectors code.
 
-In this exercise, you will modify the [here](src/addVectors/addVectors.c) application so that the iterations of the loop are distributed among the threads in the parallel region. For that, do the following steps:
+In this exercise, you will modify the application [here](src/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region. For that, do the following steps:
 1. In the terminal, go to the folder addVectors: ```cd src/addVectors/```
 2. Clean the folder with ```make clean```
 3. After editing and saving the code, compile: ```make```
@@ -269,12 +266,80 @@ In this exercise, you will modify the [here](src/addVectors/addVectors.c) applic
 
 #### **3.2.1.1 schedule(type) clause**
 
+This clause specifies how iterations of the for loop are divided among available threads. Acceptable values for ```type``` are:
 
-#### **3.2.1.2 ordered clause**
+- **static**: Iterations of a loop are divided into chunks of size *ceiling(number_of_iterations/number_of_threads)*. Each thread is assigned a separate chunk. This scheduling policy is also known as block scheduling.
+
+- **static,n**: Iterations of a loop are divided into chunks of size *n*. Each chunk is assigned to a thread in round-robin fashion. *n* must be an integral assignment expression of value 1 or greater.
+
+- **dynamic**: Iterations of a loop are divided into chunks of size *ceiling(number_of_iterations/number_of_threads)*.
+Chunks are dynamically assigned to active threads on a "first-come, first-do" basis until all work has been assigned.
+
+- **dynamic,n**: As above, except chunks are set to size *n*. *n* must be an integral assignment expression of value 1 or greater.
+
+- **guided**: Chunks are made progressively smaller until the default minimum chunk size is reached. The first chunk is of size *ceiling(number_of_iterations/number_of_threads)*. Remaining chunks are of size *ceiling(number_of_iterations_left/number_of_threads)*. The minimum chunk size is 1. Chunks are assigned to active threads on a "first-come, first-do" basis until all work has been assigned.
+
+- **guided,n**: As above, except the minimum chunk size is set to *n*; *n* must be an integral assignment expression of value 1 or greater.
+
+- **runtime**: Scheduling policy is determined at run time. Use the OMP_SCHEDULE environment variable to set the scheduling type and chunk size.
+
+- **auto**: the scheduling is delegated to the compiler and runtime system. The compiler and runtime system can choose any possible mapping of iterations to threads (including all possible valid schedules) and these may be different in different loops.
+
+#### Exercise 5: Playing with different scheduler types.
+
+In this exercise, you will modify the application [here](src/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region considering the types defined above. For that, do the following steps:
+1. In the terminal, go to the folder addVectors: ```cd src/addVectors/```
+2. Clean the folder with ```make clean```
+3. After editing and saving the code, compile: ```make```
+4. To run: ```make run```
+5. What is the output? Are the threads computing different indices of each array?
+6. Repeat this process changing the type and the chunksize.
 
 
-#### **3.2.1.3 reduction(operator: list) clause**
+#### **3.2.1.2 nowait clause**
+
+This clause can be employed to avoid the implied barrier at the end of the ```for``` directive. This is useful when there are multiple independent work-sharing sections or iterative loops within a given parallel region. Only one nowait clause can appear on a given for directive. The example below describes the usage on a parallel region with two loops.
 
 
-#### **3.2.1.4 collapse(n) clause**
+```
+#pragma omp parallel
+{
+    #pragma omp for nowait
+    for(int i = 0; i < N; i++){
+        \* loop operations in parallel *\
+    }
+
+    #pragma omp for nowait
+    for(int i = 0; i < N; i++){
+        \* loop operations in parallel *\
+    }
+}
+
+```
+
+#### **3.2.1.3 collapse(n) clause**
+
+When this clause is employed, it allows you to parallelize *n* multiple loops in a nest without introducing nested parallelism.
+For that, the loops must form a rectangular iteration space and the bounds and stride of each loop must be invariant over all the loops. If the loop indices are of different size, the index with the largest size will be used for the collapsed loop.
+The loops must be perfectly nested; that is, there is no intervening code nor any OpenMP pragma between the loops which are collapsed. 
+The associated do-loops must be structured blocks. Their execution must not be terminated by a **break** statement.
+If multiple loops are associated to the loop construct, only an iteration of the innermost associated loop may be curtailed by a continue statement. If multiple loops are associated to the loop construct, there must be no branches to any of the loop termination statements except for the innermost associated loop.
+
+The following example depicts the parallelization of two loops that are collapsed.
+
+```
+#pragma omp parallel for collapse(2)
+for(int i = 0; i < N; i++){
+    for(int j = 0; j < N; j++){
+        \* loop operations in parallel *\
+    }
+}
+
+```
+
+#### **3.2.1.4 Ordered clause**
+
+When this clause is employed, during execution of an iteration of a loop or a loop nest within a loop region, the executing thread must not execute more than one ordered region which binds to the same loop region. As a consequence, if multiple loops are associated to the loop construct by a collapse clause, the ordered construct has to be located inside all associated loops.
+
+
 

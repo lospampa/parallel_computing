@@ -15,7 +15,6 @@ void initVector(int *A, int *B, int *C){
 void addVector(int *A, int *B, int *C){
     #pragma omp parallel
     {
-        #pragma omp for
         for(int i = 0; i < N; i++){
             C[i] = A[i] + B[i];
             printf("Thread %d calculating C[%d] = A[%d] + B[%d]\n", omp_get_thread_num(), i, i, i);

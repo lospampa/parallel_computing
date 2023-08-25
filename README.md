@@ -34,6 +34,7 @@ _Pragma("omp directive-specification")
 
 OpenMP clauses are speciﬁed as part of a directive-speciﬁcation. Clauses are optional and, thus, may be omitted from a directive-speciﬁcation unless otherwise speciﬁed. The order in which clauses appear on directives is not signiﬁcant unless otherwise speciﬁed.
 
+---
 
 ## **3 Exploiting Parallelism**
 
@@ -123,6 +124,22 @@ In this exercise, you will run an application that performs the addVectors opera
 6. We will cover the worksharing constructor in the next chapter.
 
 
+### **3.1.2 Clauses**
+
+#### **3.1.2.1 Private**
+
+#### **3.1.2.2 Shared**
+
+#### **3.1.2.3 Firstprivate**
+
+#### **3.1.2.4 Lastprivate**
+
+#### **3.1.2.5 Num_threads**
+
+#### **3.1.2.6 Reduction**
+
+---
+
 ### **3.2 Work-sharing constructs**
 
 A work-sharing construct delegates the execution of the corresponding region among the threads within its designated thread team. Threads execute portions of the parallel region. 
@@ -163,3 +180,16 @@ In this exercise, you will modify the [here](src/addVectors/addVectors.c) applic
 4. To run: ```make run```
 5. What is the output? Are the threads computing different indices of each array?
 6. Change the number of threads. What happens? 
+
+
+#### **3.2.1.1 schedule(type) clause**
+
+
+#### **3.2.1.2 ordered clause**
+
+
+#### **3.2.1.3 reduction(operator: list) clause**
+
+
+#### **3.2.1.4 collapse(n) clause**
+

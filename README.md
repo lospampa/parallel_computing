@@ -1,6 +1,4 @@
-# **Parallel Computing**
-
-# **OpenMP**
+# **Introduction to Parallel Computing with OpenMP**
 
 OpenMP (Open Multi-Processing) is an application programming interface (API) that supports multi-platform shared-memory multiprocessing programming in C, C++, and Fortran. It consists of a set of compiler #pragmas that control how the program works. The pragmas are designed so that even if the compiler does not support them, the program will still yield correct behavior, but without any parallelism.
 
@@ -342,4 +340,43 @@ for(int i = 0; i < N; i++){
 When this clause is employed, during execution of an iteration of a loop or a loop nest within a loop region, the executing thread must not execute more than one ordered region which binds to the same loop region. As a consequence, if multiple loops are associated to the loop construct by a collapse clause, the ordered construct has to be located inside all associated loops.
 
 
+### **3.2.2 \#pragma omp single**
 
+The ```single``` construct specifies that the associated structured block is executed by only one of the threads in the team (not necessarily the master thread), in the context of its implicit task. The other threads in the team, which do not execute the block, wait at an implicit barrier at the end of the single construct unless a nowait clause is specified. In the following example, only one thread will execute the printf operation.
+
+```
+#pragma omp parallel
+{
+    #pragma omp single
+    {
+        printf("Total number of threads: %d\n", omp_get_num_threads());
+    }
+    \* operations done in parallel *\
+
+}
+
+```
+
+### **3.2.3 \#pragma omp sections**
+
+When this work-sharing constructor is employed, a set of structured blocks are distributed among and executed by the threads in a team. Each structured block is executed once by one of the threads in the team in the context of its implicit task. The following example depicts the execution of two operations in parallel by two threads (each thread executes a different section).
+
+
+```
+#pragma omp parallel
+{
+    #pragma omp sections
+    { 
+        #pragma omp section 
+        {
+            printf("Thread %d is running the first structured block\n", omp_get_thread_num());
+        } 
+        #pragma omp section 
+        {
+            printf("Thread %d is running the second structured block\n", omp_get_thread_num());
+        } 
+   }
+}
+```
+
+When this work-sharing is employed, the parallelization scheme is very similar to the one applied by POSIX Threads. In this scenario, the programmer is responsible for dividing the workload among threads in sections.

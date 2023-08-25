@@ -382,6 +382,10 @@ When this work-sharing constructor is employed, a set of structured blocks are d
 When this work-sharing is employed, the parallelization scheme is very similar to the one applied by POSIX Threads. In this scenario, the programmer is responsible for dividing the workload among threads in sections.
 
 
+
+# **3.xxx SIMD...**
+
+
 ## **3.4 - Exercises**
 
 ### **3.4.1 - Problem 1**

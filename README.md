@@ -67,14 +67,14 @@ An implicit barrier occurs at the end of a ```parallel``` region to join all thr
 
 #### Exercise 1: Parallelizing the first code
 
-For this exercise, you must apply the ```#pragma omp parallel```to parallelize the code [hello.c](src/hello/hello.c). For that, follow the steps below:
-1. In the terminal, go to the directory by typing : ```cd /src/hello```
+For this exercise, you must apply the ```#pragma omp parallel```to parallelize the code [hello.c](src/introduction/hello/hello.c). For that, follow the steps below:
+1. In the terminal, go to the directory by typing : ```cd /src/introduction/hello```
 2. Compile the sequential code and execute: ```make && make run```. The output of this execution will be a single message 
 
         Hello World
 
-3. Parallelize the code [hello.c](src/hello/hello.c) with the OpenMP parallel constructor so that multiple *Hello World* are printed, one by each thread. Don't forget to save the modifications.
-4. When step 3 is done, edit the [Makefile](src/hello/Makefile) to include the flag ```-fopenmp```. Don't forget to save the modifications.
+3. Parallelize the code [hello.c](src/introduction/hello/hello.c) with the OpenMP parallel constructor so that multiple *Hello World* are printed, one by each thread. Don't forget to save the modifications.
+4. When step 3 is done, edit the [Makefile](src/introduction/hello/Makefile) to include the flag ```-fopenmp```. Don't forget to save the modifications.
 5. Compile the OpenMP code and execute it: ```make && make run```. The output with two threads should be as follows:
 
        Hello World
@@ -99,7 +99,7 @@ By default, the number of threads that are created to execute each parallel regi
 
 #### Exercise 2: Changing the number of threads
 
-For this exercise, you must apply the previous knowledge acquired to change the number of running threads in the parallel region for the code [hello.c](src/hello/hello.c) (to execute it, you can follow the same steps as Exercise 1). 
+For this exercise, you must apply the previous knowledge acquired to change the number of running threads in the parallel region for the code [hello.c](src/introduction/hello/hello.c) (to execute it, you can follow the same steps as Exercise 1). 
 1. To use the environment variable, you can type it directly into the terminal below or edit the Makefile.
 2. To use the function, you need to write it before the parallel constructor.
 3. To use the clause, you just need to write it in the end of the ```#pragma omp parallel``` directive.
@@ -113,8 +113,8 @@ After trying the different ways of defining the number of threads, take a time t
 
 #### Exercise 3: What is wrong with this code?
 
-In this exercise, you will run an application that performs the addVectors operation in parallel. This application is parallelized with only the ```#pragma omp parallel```directive. You can find the source code [here](src/addVectors/addVectors.c). To run, do the following steps:
-1. In the terminal, go to the folder addVectors: ```cd src/addVectors/```
+In this exercise, you will run an application that performs the addVectors operation in parallel. This application is parallelized with only the ```#pragma omp parallel```directive. You can find the source code [here](src/introduction/addVectors/addVectors.c). To run, do the following steps:
+1. In the terminal, go to the folder addVectors: ```cd src/introduction/addVectors/```
 2. To compile: ```make```
 3. To run: ```make run```
 4. What is the output? Why all threads are computing the same indices of each array?
@@ -253,8 +253,8 @@ for(int i = 0; i < N; i++){
 
 #### Exercise 4: Applying the Work-sharing constructor for the addVectors code.
 
-In this exercise, you will modify the application [here](src/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region. For that, do the following steps:
-1. In the terminal, go to the folder addVectors: ```cd src/addVectors/```
+In this exercise, you will modify the application [here](src/introduction/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region. For that, do the following steps:
+1. In the terminal, go to the folder addVectors: ```cd src/introduction/addVectors/```
 2. Clean the folder with ```make clean```
 3. After editing and saving the code, compile: ```make```
 4. To run: ```make run```
@@ -285,8 +285,8 @@ Chunks are dynamically assigned to active threads on a "first-come, first-do" ba
 
 #### Exercise 5: Playing with different scheduler types.
 
-In this exercise, you will modify the application [here](src/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region considering the types defined above. For that, do the following steps:
-1. In the terminal, go to the folder addVectors: ```cd src/addVectors/```
+In this exercise, you will modify the application [here](src/introduction/addVectors/addVectors.c) so that the iterations of the loop are distributed among the threads in the parallel region considering the types defined above. For that, do the following steps:
+1. In the terminal, go to the folder addVectors: ```cd src/introduction/addVectors/```
 2. Clean the folder with ```make clean```
 3. After editing and saving the code, compile: ```make```
 4. To run: ```make run```
@@ -380,3 +380,14 @@ When this work-sharing constructor is employed, a set of structured blocks are d
 ```
 
 When this work-sharing is employed, the parallelization scheme is very similar to the one applied by POSIX Threads. In this scenario, the programmer is responsible for dividing the workload among threads in sections.
+
+
+## **3.4 - Exercises**
+
+### **3.4.1 - Problem 1**
+
+### **3.4.2 - Problem 2**
+
+### **3.4.3 - Problem 3**
+
+### **3.4.4 - Problem 4**

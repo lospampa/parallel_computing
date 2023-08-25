@@ -126,17 +126,102 @@ In this exercise, you will run an application that performs the addVectors opera
 
 ### **3.1.2 Clauses**
 
-#### **3.1.2.1 Private**
+#### **3.1.2.1 private(list)**
 
-#### **3.1.2.2 Shared**
+This clause declares the scope of the data variables in ```list``` to be private to each thread during the parallel region. Data variables in list are separated by commas, as exemplified below for variables ```a``` and ```b``` .
 
-#### **3.1.2.3 Firstprivate**
+```
+int a, b, c;
+#pragma omp parallel private(a, b)
+{
+    a = omp_get_thread_num();
+    b = srand();
+    printf("thread id %d generated a random value %d\n", a, b);
+}
 
-#### **3.1.2.4 Lastprivate**
+```
 
-#### **3.1.2.5 Num_threads**
 
-#### **3.1.2.6 Reduction**
+#### **3.1.2.2 shared(list)**
+
+When this clause is employed, the scope of the comma-separated data variables in list are defined to be shared across all threads. By default, all variables are shared among the threads. In the example below, the array ```A``` is declared to be shared.
+
+```
+int A[N];
+#pragma omp parallel shared(A)
+{
+    int sum_per_thread = 0;
+    for(int i = 0; i < N; i++){
+        sum_per_thread += A[i] * omp_get_thread_num();
+    }    
+}
+```
+
+#### **3.1.2.3 firstprivate(list)**
+
+When this clause is applied to a parallel region, the scope of the data variables in ```list``` to be private to each thread. Different from the ```private``` clause, each new private variable is initialized with the value of the original variable as if there was an implied declaration within the statement block. Also, data variables in list are separated by commas. In the example below, the printed values for ```a``` and ```b``` should be 100 and 10, respectively.
+
+```
+int a = 100, b = 10, c;
+#pragma omp parallel private(c) firstprivate(a, b)
+{
+    printf("thread id %d with values a (%d), b(%d) and c(%d)\n", omp_get_thread_num(), a, b, c);
+}
+
+```
+
+#### **3.1.2.4 num_threads(int n)**
+
+When this clause is employed, the value of ```n``` is an integer expression that specifies the number of threads to use for the parallel region. If dynamic adjustment of the number of threads is also enabled, then ```n``` specifies the maximum number of threads to be used. In the example below, 16 threads should be created and each one should print its id along with the number 16.
+
+```
+int nThreads = 16;
+int idThread, totalThreads;
+#pragma omp parallel num_threads(nThreads) private(idThread) shared(totalThreads)
+{
+    idThread = omp_get_thread_num();
+    totalThreads = omp_get_num_threads();
+    printf("I am thread %d from a total of %d threads\n", idThread, totalThreads);       
+}
+```
+
+
+#### **3.1.2.5 reduction(operator: list)**
+
+This clause performs a reduction on all scalar variables in ```list``` using the specified ```operator```. Reduction variables in list are separated by commas. When it is employed, a private copy of each variable in list is created for each thread. At the end of the statement block, the final values of all private copies of the reduction variable are combined in a manner appropriate to the operator, and the result is placed back in the original value of the shared reduction variable. For example, when the max operator is specified, the original reduction variable value combines with the final values of the private copies by using the following expression:
+
+```
+    original_reduction_variable = original_reduction_variable < private_copy ?
+    private_copy : original_reduction_variable;
+```
+
+When the programming language is C or C++, the following operators can be used.
+ 
+<table ><tr><th > Identifier	<th><th>   Initializer <th><th>   Combiner <tr><tr>
+<tr><td> +	                <td><td>   omp_priv = 0	            <td><td>    omp_out += omp_in <tr><tr>
+<tr><td> -	                <td><td>   omp_priv = 0	            <td><td>    omp_out += omp_in <tr><tr>
+<tr><td> *	                <td><td>   omp_priv = 1	            <td><td>    omp_out *= omp_in <tr><tr>
+<tr><td> &	                <td><td>   omp_priv = ~ 0	        <td><td>    omp_out &= omp_in <tr><tr>
+<tr><td> |	                <td><td>   omp_priv = 0	            <td><td>    omp_out |= omp_in <tr><tr>
+<tr><td> ^	                <td><td>   omp_priv = 0	            <td><td>    omp_out ^= omp_in <tr><tr>
+<tr><td> &&	            <td><td>   omp_priv = 1	                <td><td>    omp_out = omp_in && omp_out <tr><tr>
+<tr><td> ||	            <td><td>   omp_priv = 0	                <td><td>    omp_out = omp_in || omp_out <tr><tr>
+<tr><td> max	            <td><td>   omp_priv = Least representable number in the reduction list item type	<td><td>    omp_out = omp_in > omp_out ? omp_in : omp_out <tr><tr>
+<tr><td> min	            <td><td>   omp_priv = Largest representable number in the reduction list item type	<td><td>    omp_out = omp_in < omp_out ? omp_in : omp_out <td><tr><table>
+
+The following example shows the reduction ```+``` operation over the variable ```sum```.
+
+```
+int sum=0;
+#pragma omp parallel reduction(+:sum)
+{
+    int idThread = omp_get_thread_num();
+    sum += idThread;    
+}
+printf("The sum of all thread ids is: %d\n", sum);       
+```
+
+
 
 ---
 

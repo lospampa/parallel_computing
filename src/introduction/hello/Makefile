@@ -1,12 +1,11 @@
 CC=gcc
 CFLAGS= #for openmp code, include the flag -fopenmp
 
-hello:
-	$(CC) hello.c -o hello $(CFLAGS)
+hello_seq:
+	$(CC) hello_seq.c -o hello_seq $(CFLAGS)
 
-run:
-	./hello
-	# if you want to change the number of running threads: export OMP_NUM_THREADS=x, where x is the number of threads.
+run_seq:
+	./hello_seq
 
 clean:
-	rm hello
+	rm hello_seq
